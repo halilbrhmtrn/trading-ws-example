@@ -3,6 +3,8 @@ const express = require('express');
 const router = express.Router();
 const Symbol = require('../models/symbol');
 const Position = require("../models/position");
+const Prices = require("../models/prices");
+
 
 
 router.post('/addsymbol', async (req, res) => {
@@ -50,6 +52,15 @@ router.get("/positions", async (req, res) => {
   try {
     const positions = await Position.find();
     res.json(positions);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+router.get("/prices", async (req, res) => {
+  try {
+    const prices = await Prices.find();
+    res.json(prices);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
