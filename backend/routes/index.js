@@ -35,4 +35,24 @@ router.post("/addposition", async (req, res) => {
   }
 });
 
+// Get all symbols
+router.get("/symbols", async (req, res) => {
+  try {
+    const symbols = await Symbol.find();
+    res.json(symbols);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// Get all positions
+router.get("/positions", async (req, res) => {
+  try {
+    const positions = await Position.find();
+    res.json(positions);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 module.exports = router;
