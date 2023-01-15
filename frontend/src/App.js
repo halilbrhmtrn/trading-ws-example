@@ -1,6 +1,6 @@
 import './App.css';
 import SymbolForm from './SymbolForm'
-import MarketPriceListing from './MarketPriceListing'
+import Positions from './Positions'
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 
@@ -11,7 +11,7 @@ function App() {
       <div className="App">
         <Routes>
           <Route exact path="/" element={<SymbolForm/>} />
-          <Route path="/market-prices" element={<MarketPriceListing/>} />
+          <Route path="/market-prices" element={<Positions/>} />
         </Routes>
       </div>
     </Router>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import PositionListing from './PositionListing';
+import SymbolListing from './SymbolListing';
 
 const SymbolForm = () => {
   const [formData, setFormData] = useState({
@@ -8,8 +8,7 @@ const SymbolForm = () => {
     marketSymbol: ''
   });
 
-  const [positions, setPositions] = useState([]);
-  const [showPositions, setShowPositions] = useState(false);
+  const [symbols, setSymbols] = useState([]);
 
 
   const handleChange = (e) => {
@@ -29,35 +28,53 @@ const SymbolForm = () => {
       .then((data) => {
         console.log(data);
         setFormData({ pair: '', marketSymbol: '' });
-        fetchPositions();
+        fetchSymbols();
         alert('Symbol added successfully');
-        setShowPositions(true);
       })
       .catch((error) => {
         console.log(error);
       });
   };
 
-  const handleClose = async (id) => {
+
+  const handleLong = async (id) => {
     try {
-        await axios.put(`/positions/${id}`, { action: 'CLOSED' });
-        fetchPositions();
+      await axios.put(`/api/symbols/${id}`, { action: 'LONG' });
+      fetchSymbols();
     } catch (err) {
-        console.error(err);
+      console.error(err);
     }
   }
 
-  const fetchPositions = async () => {
+  const handleShort = async (id) => {
     try {
-        const res = await axios.get('/positions');
-        setPositions(res.data);
+      await axios.put(`/symbols/${id}`, { action: 'SHORT' });
+      fetchSymbols();
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  const handleClose = async (id) => {
+    try {
+      await axios.put(`/symbols/${id}`, { action: 'CLOSED' });
+      fetchSymbols();
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  const fetchSymbols = async () => {
+    try {
+        const res = await axios.get('/symbols');
+        setSymbols(res.data);
     } catch (err) {
         console.error(err);
     }
   }
 
   useEffect(() => {
-    fetchPositions();
+    fetchSymbols();
   }, []);
 
   return (
@@ -75,7 +92,7 @@ const SymbolForm = () => {
         </form>
         
         <div className="col-md-9 mt-4">
-        {showPositions ? <PositionListing handleClose={handleClose} positions={positions} /> : null}
+        {<SymbolListing handleClose={handleClose} handleLong={handleLong} handleShort={handleShort} symbols={symbols} />}
         </div>
     </div>  
 );
