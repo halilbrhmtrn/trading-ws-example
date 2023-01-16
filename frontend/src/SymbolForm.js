@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import SymbolListing from './SymbolListing';
+import { useNavigate } from 'react-router-dom';
+
 
 const SymbolForm = () => {
   const [formData, setFormData] = useState({
@@ -9,6 +11,7 @@ const SymbolForm = () => {
   });
 
   const [symbols, setSymbols] = useState([]);
+  const navigate = useNavigate();
 
 
   const handleChange = (e) => {
@@ -44,6 +47,7 @@ const SymbolForm = () => {
     try {
       await axios.put(`/symbols/${symbol._id}`, { ...symbol, action: 'LONG' });
       const newPosition = {
+        _id: symbol._id,
         pair: symbol.pair,
         marketSymbol: symbol.marketSymbol,
         position: 'LONG',
@@ -62,6 +66,7 @@ const SymbolForm = () => {
     try {
       await axios.put(`/symbols/${symbol._id}`, { ...symbol, action: 'SHORT' });
       const newPosition = {
+        _id: symbol._id,
         pair: symbol.pair,
         marketSymbol: symbol.marketSymbol,
         position: 'SHORT',
@@ -78,13 +83,25 @@ const SymbolForm = () => {
 
   const handleClose = async (symbol) => {
     try {
-      await axios.put(`/symbols/${symbol._id}`, { action: 'CLOSED' });
-      const updatedPosition = {
-        exit_price: symbol.price,
-        closedAt: Date.now()
-    }
-    await axios.put(`/positions/${symbol._id}`, updatedPosition);
-      fetchSymbols();
+      const resp = await axios.get(`/positions/${symbol._id}`);
+      const positionData = resp.data;
+      const exitPrice = symbol.price;
+      const entryPrice = positionData.entry_price;
+      const qty = positionData.qty;
+      const position = positionData.position === 'LONG' ? 1 : -1;
+      const pnlUsdt = (exitPrice - entryPrice) * qty * position;
+      const pnlPercent = (pnlUsdt / (entryPrice * qty)) * 100;
+      const profit = pnlUsdt > 0;
+  
+      await axios.put(`/positions/${symbol._id}`, { 
+        exit_price: exitPrice,
+        pnl_usdt: pnlUsdt,
+        pnl_percent: pnlPercent,
+        profit: profit,
+        position: 'CLOSED'
+      });
+  
+      navigate('/market-prices');
     } catch (err) {
       console.error(err);
     }

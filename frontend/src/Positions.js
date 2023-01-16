@@ -36,13 +36,13 @@ const Positions = () => {
                     {positions.map((position) => (
                         <tr key={position._id}>
                             <td>{position.pair}</td>
-                            <td>{position.entryPrice}</td>
-                            <td>{position.exitPrice}</td>
+                            <td>{position.entry_price}</td>
+                            <td>{position.exit_price}</td>
                             <td>{position.qty}</td>
-                            <td>{position.position === 1 ? 'LONG' : 'SHORT'}</td>
-                            <td>{((position.exitPrice - position.entryPrice) * position.qty) * position.position}</td>
-                            <td>{(((position.exitPrice - position.entryPrice) / position.entryPrice) * position.position * 100).toFixed(2)}%</td>
-                            <td>{((position.exitPrice - position.entryPrice) * position.qty) * position.position > 0 ? 'TRUE' : 'FALSE'}</td>
+                            <td>{position.position}</td>
+                            <td>{position.pnl_usdt}</td>
+                            <td>{position.pnl_percent}%</td>
+                            <td>{position.profit}</td>
                         </tr>
                     ))}
                 </tbody>

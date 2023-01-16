@@ -26,6 +26,7 @@ router.post('/symbol', async (req, res) => {
 
 router.post("/position", async (req, res) => {
   const newPosition = new Position({
+    _id: req.body._id,
     pair: req.body.pair,
     marketSymbol: req.body.marketSymbol,
     position: req.body.position,
@@ -41,7 +42,6 @@ router.post("/position", async (req, res) => {
   }
 });
 
-// Get all symbols
 router.get("/symbols", async (req, res) => {
   try {
     const symbols = await Symbol.find();
@@ -63,7 +63,6 @@ router.put("/symbols/:id", async (req, res) => {
   }
 });
 
-// Get all positions
 router.get("/positions", async (req, res) => {
   try {
     const positions = await Position.find();
@@ -73,11 +72,22 @@ router.get("/positions", async (req, res) => {
   }
 });
 
+router.get("/positions/:id", async (req, res) => {
+  try {
+    const position = await Position.findById(req.params.id);
+    if (!position) {
+      return res.status(404).json({ message: "Position not found" });
+    }
+    res.json(position);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 
 router.put("/positions/:id", async (req, res) => {
   try {
     const {id} = req.params;
-    const updatedPosition = await Symbol.findOneAndUpdate({_id: id}, {...req.body});
+    const updatedPosition = await Position.findOneAndUpdate({_id: id}, {...req.body});
     await updatedPosition.save();
     res.json(updatedPosition);
   } catch (err) {
