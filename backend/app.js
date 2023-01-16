@@ -7,10 +7,6 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 const cors = require('cors');
 
-const {db1, db2} = require('./connections.js')
-const mongoose = require('mongoose');
-
-
 var app = express();
 
 // view engine setup
