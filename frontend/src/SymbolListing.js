@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 
 const SymbolListing = ({ handleClose, handleLong, handleShort, symbols }) => {
+    const navigate = useNavigate();
     const [prices, setPrices] = useState({});
     const [initialPrices, setInitialPrices] = useState({});
     const [wsConnections, setWsConnections] = useState({});
@@ -8,6 +11,15 @@ const SymbolListing = ({ handleClose, handleLong, handleShort, symbols }) => {
     const symbolsMemo = useMemo(() => symbols, [symbols]);
     const [connected, setConnected] = useState(0);
 
+    const handleLongShort = async (symbol, isLong) => {
+        if (isLong) {
+            await handleLong(symbol);
+            navigate('/market-prices');
+        } else {
+            await handleShort(symbol);
+            navigate('/market-prices');
+        }
+    };
 
     useEffect(() => {
         setIsLoading(true);
@@ -65,11 +77,12 @@ const SymbolListing = ({ handleClose, handleLong, handleShort, symbols }) => {
                                         <td>
                                             {!symbol.position ? (
                                                 <>
-                                                    <button onClick={() => handleLong(symbol)}>LONG</button>
-                                                    <button onClick={() => handleShort(symbol)}>SHORT</button>
+                                                    <button onClick={async () => await handleLongShort(symbol, true)}>LONG</button>
+                                                    <button onClick={async () => await handleLongShort(symbol, false)}>SHORT</button>
+
                                                 </>
                                             ) : (
-                                                <button onClick={() => handleClose(symbol)}>CLOSE</button>
+                                                <button onClick={() => handleClose(symbol)} disabled={symbol.position === 'CLOSED'}>CLOSE</button>
                                             )}
                                         </td>
                                     </tr>
