@@ -4,14 +4,14 @@ const router = express.Router();
 const Symbol = require('../models/symbol');
 const Position = require("../models/position");
 const Prices = require("../models/prices");
-const { getPrice } = require('../binanceAPI');
+const { getSymbolPrice } = require('../binanceAPI');
 
 
 
 
 router.post('/symbol', async (req, res) => {
     try {
-        const price = await getPrice(req.body.marketSymbol);
+        const price = await getSymbolPrice(req.body.marketSymbol);
         const newSymbol = new Symbol({ 
             pair: req.body.pair,
             marketSymbol: req.body.marketSymbol,

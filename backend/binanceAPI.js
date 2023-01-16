@@ -1,15 +1,18 @@
-const axios = require('axios');
+const request = require("request");
 
-const getPrice = async (symbol) => {
-    try {
-        const url = `https://api.binance.com/api/v3/ticker/price?symbol=${symbol}`;
-        const { data } = await axios.get(url);
-        return data.price;
-    } catch (error) {
-        console.error(error);
-    }
+function getSymbolPrice(symbol) {
+    return new Promise((resolve, reject) => {
+      const url = `https://api.binance.com/api/v3/ticker/price?symbol=${symbol.toUpperCase()}`;
+  
+      request(url, {json: true}, (err, res, body) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(body.price);
+      });
+    });
 }
 
 module.exports = {
-    getPrice
+    getSymbolPrice
 }

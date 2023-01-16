@@ -5,11 +5,7 @@ import SymbolListing from './SymbolListing';
 const SymbolForm = () => {
   const [formData, setFormData] = useState({
     pair: '',
-    marketSymbol: '',
-    action: '',
-    position: '',
-    price: null,
-    _id: ''
+    marketSymbol: ''
   });
 
   const [symbols, setSymbols] = useState([]);
@@ -32,11 +28,8 @@ const SymbolForm = () => {
       .then((data) => {
         console.log(data);
         setFormData({
-          pair: '', marketSymbol: '',
-          action: '',
-          position: '',
-          price: null,
-          _id: ''
+          pair: '',
+          marketSymbol: ''
         });
         fetchSymbols();
         alert('Symbol added successfully');

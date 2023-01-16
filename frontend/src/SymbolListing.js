@@ -7,7 +7,6 @@ const SymbolListing = ({ handleClose, handleLong, handleShort, symbols }) => {
     const [prices, setPrices] = useState({});
     const [initialPrices, setInitialPrices] = useState({});
     const [wsConnections, setWsConnections] = useState({});
-    const [isLoading, setIsLoading] = useState(true);
     const symbolsMemo = useMemo(() => symbols, [symbols]);
     const [connected, setConnected] = useState(0);
 
@@ -22,7 +21,6 @@ const SymbolListing = ({ handleClose, handleLong, handleShort, symbols }) => {
     };
 
     useEffect(() => {
-        setIsLoading(true);
 
         symbolsMemo.forEach(symbol => {
             if (!wsConnections[symbol.marketSymbol]) {
@@ -44,16 +42,10 @@ const SymbolListing = ({ handleClose, handleLong, handleShort, symbols }) => {
     useEffect(() => {
         if (connected === symbolsMemo.length) {
             setInitialPrices(prices);
-            setIsLoading(false);
         }
     }, [prices, connected, symbolsMemo]);
 
     return (
-        <div>
-            {isLoading ? (
-                <div>Loading...</div>
-            ) :
-                (
                     <div className="container">
                         <table className="table">
                             <thead>
@@ -90,8 +82,7 @@ const SymbolListing = ({ handleClose, handleLong, handleShort, symbols }) => {
                             </tbody>
                         </table>
                     </div>
-                )}
-        </div>
+            
     );
 }
 
