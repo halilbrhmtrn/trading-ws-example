@@ -43,8 +43,8 @@ const Positions = () => {
                             <td>{position.qty}</td>
                             <td>{position.position}</td>
                             <td>{position.pnl_usdt}</td>
-                            <td>{position.pnl_percent}%</td>
-                            <td>{position.profit}</td>
+                            <td>{position.pnl}%</td>
+                            <td>{position.profit.toString()}</td>
                         </tr>
                     ))}
                 </tbody>
