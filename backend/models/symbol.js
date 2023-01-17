@@ -6,6 +6,9 @@ const symbolSchema = new mongoose.Schema({
     pair: { type: String, required: true },
     marketSymbol: { type: String, required: true },
     position: { type: String, default: null },
+    positions: [{ 
+        type: Schema.Types.ObjectId, 
+        ref: 'position' }],
     price: { type: Number, default: null },
     action: { type: String, default: null }
 });

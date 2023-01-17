@@ -23,6 +23,7 @@ const Positions = () => {
                 <thead>
                     <tr>
                         <th>Pair</th>
+                        <th>Symbol</th>
                         <th>Entry Price</th>
                         <th>Exit Price</th>
                         <th>Qty</th>
@@ -36,6 +37,7 @@ const Positions = () => {
                     {positions.map((position) => (
                         <tr key={position._id}>
                             <td>{position.pair}</td>
+                            <td>{position.marketSymbol}</td>
                             <td>{position.entry_price}</td>
                             <td>{position.exit_price}</td>
                             <td>{position.qty}</td>

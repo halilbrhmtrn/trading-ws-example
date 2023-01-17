@@ -3,11 +3,7 @@ const express = require('express');
 const router = express.Router();
 const Symbol = require('../models/symbol');
 const Position = require("../models/position");
-const Prices = require("../models/prices");
 const { getSymbolPrice } = require('../binanceAPI');
-
-
-
 
 router.post('/symbol', async (req, res) => {
     try {
@@ -25,17 +21,19 @@ router.post('/symbol', async (req, res) => {
 });
 
 router.post("/position", async (req, res) => {
-  const newPosition = new Position({
-    _id: req.body._id,
-    pair: req.body.pair,
-    marketSymbol: req.body.marketSymbol,
-    position: req.body.position,
-    entry_price: req.body.entry_price,
-    qty: 1,
-  });
-
   try {
-    await newPosition.save();
+    const symbol = await Symbol.findById(req.body.symbolId);
+    if (!symbol) {
+      return res.status(404).json({ message: "Symbol not found" });
+    }
+    const newPosition = new Position({
+      symbolId: req.body.symbolId,
+      position: req.body.position,
+      entry_price: req.body.entry_price,
+      qty: 1,
+    });
+    symbol.positions.push(newPosition);
+    await symbol.save();
     res.json(newPosition);
   } catch (err) {
     res.status(400).json({ message: err.message });
@@ -95,10 +93,11 @@ router.put("/positions/:id", async (req, res) => {
   }
 });
 
-router.get("/prices", async (req, res) => {
+router.get("/positions/:symbolId", async (req, res) => {
   try {
-    const prices = await Prices.find();
-    res.json(prices);
+    const { symbolId } = req.params;
+    const positions = await Position.find({ symbolId });
+    res.json(positions);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
